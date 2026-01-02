@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, User, LogIn, Trophy } from "lucide-react";
+import { Home, User, LogIn, Trophy, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Header = () => {
@@ -26,6 +26,15 @@ export const Header = () => {
                 className="rounded-xl"
               >
                 <Home className="w-5 h-5" />
+              </Button>
+            </Link>
+            <Link to="/events">
+              <Button 
+                variant={isActive("/events") ? "secondary" : "ghost"} 
+                size="icon"
+                className="rounded-xl"
+              >
+                <CalendarDays className="w-5 h-5" />
               </Button>
             </Link>
             <Link to="/profile">
