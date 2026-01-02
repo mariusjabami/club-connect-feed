@@ -1,0 +1,131 @@
+import { Post, Club, Player, Event } from "@/types";
+
+export const mockPosts: Post[] = [
+  {
+    id: "1",
+    authorId: "c1",
+    authorName: "FC Estrela",
+    authorUsername: "fcestrela",
+    authorType: "club",
+    content: "Grande vitória ontem! 3x1 contra o União FC. Parabéns a todos os atletas! ⚽🏆\n\nPróximo jogo: sábado às 15h no Estádio Municipal.",
+    likes: 245,
+    comments: 32,
+    createdAt: new Date(Date.now() - 3600000 * 2),
+  },
+  {
+    id: "2",
+    authorId: "p1",
+    authorName: "Lucas Silva",
+    authorUsername: "lucassilva10",
+    authorType: "player",
+    content: "Mais um treino intenso hoje! Preparação total para o campeonato. 💪\n\n#FocoTotal #Futebol",
+    likes: 89,
+    comments: 12,
+    createdAt: new Date(Date.now() - 3600000 * 5),
+  },
+  {
+    id: "3",
+    authorId: "c2",
+    authorName: "Atlético Jovem",
+    authorUsername: "atleticojovem",
+    authorType: "club",
+    content: "📢 PENEIRAS ABERTAS!\n\nEstamos buscando novos talentos para as categorias sub-17 e sub-20.\n\nInscrições abertas até 15/02. Link na bio!",
+    likes: 412,
+    comments: 87,
+    createdAt: new Date(Date.now() - 3600000 * 8),
+  },
+  {
+    id: "4",
+    authorId: "p2",
+    authorName: "Pedro Santos",
+    authorUsername: "pedrosantos7",
+    authorType: "player",
+    content: "Honrado em fazer parte do FC Estrela! Nova fase, novos desafios. Vamos com tudo! 🔵⚪",
+    likes: 156,
+    comments: 23,
+    createdAt: new Date(Date.now() - 3600000 * 24),
+  },
+];
+
+export const mockClub: Club = {
+  id: "c1",
+  name: "FC Estrela",
+  username: "fcestrela",
+  type: "club",
+  bio: "Clube de futebol fundado em 1985. Formando campeões e cidadãos. 🏆 5x Campeão Regional",
+  location: "São Paulo, SP",
+  foundedYear: 1985,
+  stadium: "Estádio Municipal",
+  colors: "Azul e Branco",
+  players: ["p1", "p2", "p3"],
+  createdAt: new Date("2020-01-01"),
+};
+
+export const mockPlayer: Player = {
+  id: "p1",
+  name: "Lucas Silva",
+  username: "lucassilva10",
+  type: "player",
+  bio: "Atacante | FC Estrela #10 | Sonhando grande, trabalhando duro ⚽",
+  position: "Atacante",
+  age: 22,
+  clubId: "c1",
+  height: "1.78m",
+  preferredFoot: "right",
+  createdAt: new Date("2021-03-15"),
+};
+
+export const mockEvents: Event[] = [
+  {
+    id: "1",
+    clubId: "c1",
+    clubName: "FC Estrela",
+    title: "Campeonato Regional - Final",
+    opponent: "União FC",
+    date: new Date(Date.now() + 86400000 * 2),
+    location: "Estádio Municipal",
+    type: "game",
+  },
+  {
+    id: "2",
+    clubId: "c1",
+    clubName: "FC Estrela",
+    title: "Treino Tático",
+    date: new Date(Date.now() + 86400000),
+    location: "CT Estrela",
+    type: "training",
+  },
+];
+
+export const mockPlayers: Player[] = [
+  {
+    id: "p1",
+    name: "Lucas Silva",
+    username: "lucassilva10",
+    type: "player",
+    position: "Atacante",
+    age: 22,
+    clubId: "c1",
+    createdAt: new Date("2021-03-15"),
+  },
+  {
+    id: "p2",
+    name: "Pedro Santos",
+    username: "pedrosantos7",
+    type: "player",
+    position: "Meio-campo",
+    age: 24,
+    clubId: "c1",
+    createdAt: new Date("2020-08-10"),
+  },
+  {
+    id: "p3",
+    name: "Gabriel Costa",
+    username: "gabrielcosta1",
+    type: "player",
+    position: "Goleiro",
+    age: 28,
+    clubId: "c1",
+    createdAt: new Date("2019-01-20"),
+  },
+];
