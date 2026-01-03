@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Trophy, Shield, User, ArrowLeft, Mail, Lock, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 type AuthMode = "login" | "register";
 type UserType = "club" | "player";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { user, signUp, signIn, loading } = useAuth();
   const [mode, setMode] = useState<AuthMode>("login");
   const [userType, setUserType] = useState<UserType | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,21 +21,71 @@ const Auth = () => {
     username: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (mode === "login") {
-      toast.success("Login realizado com sucesso!");
+  useEffect(() => {
+    if (!loading && user) {
       navigate("/");
-    } else {
-      toast.success("Conta criada com sucesso!");
-      navigate("/profile");
     }
+  }, [user, loading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    if (mode === "login") {
+      const { error } = await signIn(formData.email, formData.password);
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Email ou senha incorretos");
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.success("Login realizado com sucesso!");
+        navigate("/");
+      }
+    } else {
+      if (!userType) {
+        toast.error("Selecione o tipo de conta");
+        setSubmitting(false);
+        return;
+      }
+
+      const { error } = await signUp(
+        formData.email,
+        formData.password,
+        formData.name,
+        formData.username,
+        userType
+      );
+
+      if (error) {
+        if (error.message.includes("already registered")) {
+          toast.error("Este email já está cadastrado");
+        } else if (error.message.includes("duplicate key") && error.message.includes("username")) {
+          toast.error("Este nome de usuário já está em uso");
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.success("Conta criada com sucesso!");
+        navigate("/profile");
+      }
+    }
+
+    setSubmitting(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -186,11 +239,12 @@ const Auth = () => {
                   onChange={handleChange}
                   className="w-full input-field pl-12"
                   required
+                  minLength={6}
                 />
               </div>
 
-              <Button type="submit" className="w-full" size="lg">
-                {mode === "login" ? "Entrar" : "Criar conta"}
+              <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+                {submitting ? "Carregando..." : mode === "login" ? "Entrar" : "Criar conta"}
               </Button>
             </form>
           )}

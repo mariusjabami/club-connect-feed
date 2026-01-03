@@ -1,27 +1,16 @@
-import { useState } from "react";
 import { Header } from "@/components/layout/Header";
-import { PostCard } from "@/components/feed/PostCard";
 import { CreatePost } from "@/components/feed/CreatePost";
 import { TrendingSidebar } from "@/components/sidebar/TrendingSidebar";
-import { mockPosts } from "@/data/mockData";
-import { Post } from "@/types";
+import { PostCardNew } from "@/components/feed/PostCardNew";
+import { usePosts } from "@/hooks/usePosts";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
-  const [posts, setPosts] = useState<Post[]>(mockPosts);
+  const { profile } = useAuth();
+  const { posts, loading, createPost, toggleLike, refreshPosts } = usePosts();
 
-  const handleNewPost = (content: string) => {
-    const newPost: Post = {
-      id: Date.now().toString(),
-      authorId: "c1",
-      authorName: "FC Estrela",
-      authorUsername: "fcestrela",
-      authorType: "club",
-      content,
-      likes: 0,
-      comments: 0,
-      createdAt: new Date(),
-    };
-    setPosts([newPost, ...posts]);
+  const handleNewPost = async (content: string) => {
+    await createPost(content);
   };
 
   return (
@@ -31,13 +20,26 @@ const Index = () => {
       <main className="container max-w-6xl mx-auto px-4 py-6">
         <div className="flex gap-6">
           <div className="flex-1 max-w-2xl">
-            <CreatePost onPost={handleNewPost} />
+            {profile && <CreatePost onPost={handleNewPost} />}
             
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
+            {loading ? (
+              <div className="text-center py-8 text-muted-foreground">Carregando posts...</div>
+            ) : posts.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                Nenhum post ainda. Seja o primeiro a postar!
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <PostCardNew 
+                    key={post.id} 
+                    post={post} 
+                    onLike={toggleLike}
+                    onCommentAdded={refreshPosts}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <TrendingSidebar />

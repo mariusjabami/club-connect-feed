@@ -1,11 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, User, LogIn, Trophy, CalendarDays } from "lucide-react";
+import { Home, User, LogIn, Trophy, CalendarDays, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Header = () => {
   const location = useLocation();
-
+  const { user, signOut } = useAuth();
+  
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border">
@@ -37,21 +43,34 @@ export const Header = () => {
                 <CalendarDays className="w-5 h-5" />
               </Button>
             </Link>
-            <Link to="/profile">
-              <Button 
-                variant={isActive("/profile") ? "secondary" : "ghost"} 
-                size="icon"
-                className="rounded-xl"
-              >
-                <User className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link to="/auth">
-              <Button variant="outline" size="sm" className="ml-2">
-                <LogIn className="w-4 h-4" />
-                <span className="hidden sm:inline">Entrar</span>
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/profile">
+                  <Button 
+                    variant={isActive("/profile") ? "secondary" : "ghost"} 
+                    size="icon"
+                    className="rounded-xl"
+                  >
+                    <User className="w-5 h-5" />
+                  </Button>
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="rounded-xl"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-5 h-5" />
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button variant="outline" size="sm" className="ml-2">
+                  <LogIn className="w-4 h-4" />
+                  <span className="hidden sm:inline">Entrar</span>
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
       </div>
